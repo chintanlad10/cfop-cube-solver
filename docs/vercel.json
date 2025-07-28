@@ -5,13 +5,13 @@
       "destination": "/index.html"
     },
     {
-      "source": "/cube",
+      "source": "/cube", 
       "destination": "/index.html"
     }
   ],
   "headers": [
     {
-      "source": "**/*.wasm",
+      "source": "/js/cube/solver/(.*)\\.wasm$",
       "headers": [
         {
           "key": "Content-Type",

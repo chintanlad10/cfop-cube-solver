@@ -1,39 +1,65 @@
 {
   "name": "cfop-cube-solver-web",
   "version": "1.0.0",
-  "description": "Interactive 3D Rubik's Cube solver using CFOP method with WebAssembly",
+  "description": "Interactive 3D Rubik's Cube solver using CFOP method with WebAssembly and Three.js",
+  "type": "module",
   "main": "index.html",
   "scripts": {
-    "start": "serve .",
-    "dev": "serve . --listen 8000",
+    "start": "serve . --listen 8000 --cors",
+    "dev": "serve . --listen 8000 --cors --no-clipboard",
+    "preview": "serve . --listen 3000 --cors",
     "build": "echo 'Static site - no build step needed'",
-    "build-wasm": "em++ ../Web.cpp ../Cube/*.cpp ../Solver/*.cpp ../Util/*.cpp --bind -o js/cube/solver/cube-solver.js -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]' -I../Cube -I../Solver -I../Util",
-    "test": "echo 'No tests configured yet'",
-    "deploy": "netlify deploy --prod --dir=."
+    "build:wasm": "em++ ../Web.cpp ../Cube/*.cpp ../Solver/*.cpp ../Util/*.cpp --bind -o js/cube/solver/cube-solver.js -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]' -s MODULARIZE=1 -s EXPORT_NAME='CubeSolverModule' -I../Cube -I../Solver -I../Util --closure 1 -O3",
+    "build:wasm:dev": "em++ ../Web.cpp ../Cube/*.cpp ../Solver/*.cpp ../Util/*.cpp --bind -o js/cube/solver/cube-solver.js -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]' -s MODULARIZE=1 -s EXPORT_NAME='CubeSolverModule' -I../Cube -I../Solver -I../Util -g",
+    "lint": "echo 'Add ESLint configuration for linting'",
+    "test": "echo 'Add test framework for testing'",
+    "validate": "echo 'Validating WebAssembly module...' && node -e \"import('./js/cube/solver/cube-solver.js').then(() => console.log('✓ WASM module is valid'))\"",
+    "deploy:vercel": "vercel --prod",
+    "deploy:netlify": "netlify deploy --prod --dir=."
   },
   "keywords": [
     "rubiks-cube",
     "cfop",
     "threejs",
     "webassembly",
-    "3d",
+    "emscripten",
+    "3d-graphics",
     "solver",
     "interactive",
-    "cube"
+    "cube-solver",
+    "speedcubing",
+    "puzzle",
+    "algorithms"
   ],
-  "author": "Your Name",
+  "author": "Chintan Lad <your-email@example.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chintanlad10/cfop-cube-solver.git",
+    "directory": "docs"
+  },
+  "bugs": {
+    "url": "https://github.com/chintanlad10/cfop-cube-solver/issues"
+  },
+  "homepage": "https://github.com/chintanlad10/cfop-cube-solver#readme",
   "devDependencies": {
-    "serve": "^14.0.0",
-    "netlify-cli": "^12.0.0"
+    "serve": "^14.2.1"
   },
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
   },
   "browserslist": [
-    "last 2 Chrome versions",
-    "last 2 Firefox versions",
-    "last 2 Safari versions",
-    "last 2 Edge versions"
+    "defaults",
+    "not ie 11",
+    "not op_mini all",
+    "> 1%",
+    "last 2 versions"
+  ],
+  "files": [
+    "index.html",
+    "style.css",
+    "js/",
+    "vercel.json"
   ]
 }
