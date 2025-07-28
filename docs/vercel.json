@@ -1,20 +1,12 @@
 {
-  "version": 2,
-  "name": "cfop-cube-solver",
-  "builds": [
+  "rewrites": [
     {
-      "src": "index.html",
-      "use": "@vercel/static"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/solver",
-      "dest": "/index.html"
+      "source": "/solver",
+      "destination": "/index.html"
     },
     {
-      "src": "/cube",
-      "dest": "/index.html"
+      "source": "/cube",
+      "destination": "/index.html"
     }
   ],
   "headers": [
