@@ -3,116 +3,270 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="Interactive 3D Rubik's Cube Solver using CFOP method with WebAssembly and Three.js">
-        <meta name="keywords" content="rubiks cube, solver, cfop, 3d, webassembly, threejs">
-        <meta name="author" content="Chintan Lad">
-        <meta name="theme-color" content="#1a1a1a">
-        
-        <!-- Open Graph / Facebook -->
-        <meta property="og:type" content="website">
-        <meta property="og:url" content="https://your-domain.vercel.app/">
-        <meta property="og:title" content="CFOP Rubik's Cube Solver - Interactive 3D">
-        <meta property="og:description" content="Interactive 3D Rubik's Cube Solver using CFOP method with WebAssembly and Three.js">
-        
-        <!-- Twitter -->
-        <meta property="twitter:card" content="summary_large_image">
-        <meta property="twitter:url" content="https://your-domain.vercel.app/">
-        <meta property="twitter:title" content="CFOP Rubik's Cube Solver - Interactive 3D">
-        <meta property="twitter:description" content="Interactive 3D Rubik's Cube Solver using CFOP method with WebAssembly and Three.js">
-        
-        <title>CFOP Rubik's Cube Solver - Interactive 3D</title>
-        
-        <!-- Preload critical resources -->
-        <link rel="preload" href="style.css" as="style">
-        <link rel="preload" href="js/cube/solver/cube-solver.wasm" as="fetch" crossorigin>
-        
-        <link rel="stylesheet" href="style.css">
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700&display=swap" rel="stylesheet">
-        
-        <!-- Security headers -->
-        <meta http-equiv="X-Content-Type-Options" content="nosniff">
-        <meta http-equiv="X-Frame-Options" content="DENY">
-        <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+        <title>Rubik's Cube Solver</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                color: white;
+            }
+            
+            .header {
+                text-align: center;
+                padding: 20px;
+                background: rgba(0, 0, 0, 0.1);
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+                margin-bottom: 10px;
+                font-weight: 700;
+            }
+            
+            .main-content {
+                flex: 1;
+                display: flex;
+                gap: 20px;
+                padding: 20px;
+                max-width: 1400px;
+                margin: 0 auto;
+                width: 100%;
+            }
+            
+            .controls {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                border-radius: 15px;
+                padding: 30px;
+                min-width: 300px;
+                height: fit-content;
+            }
+            
+            .cube-container {
+                flex: 1;
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 15px;
+                overflow: hidden;
+                position: relative;
+                min-height: 600px;
+            }
+            
+            #three {
+                width: 100%;
+                height: 100%;
+                min-height: 600px;
+                display: block;
+            }
+            
+            .btn {
+                background: rgba(255, 255, 255, 0.2);
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                color: white;
+                padding: 12px 24px;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: 600;
+                font-size: 16px;
+                margin: 8px 0;
+                width: 100%;
+                transition: all 0.3s ease;
+            }
+            
+            .btn:hover {
+                background: rgba(255, 255, 255, 0.3);
+                transform: translateY(-2px);
+            }
+            
+            .btn-primary {
+                background: #4CAF50;
+                border-color: #4CAF50;
+            }
+            
+            .btn-primary:hover {
+                background: #45a049;
+            }
+            
+            input {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid rgba(255, 255, 255, 0.3);
+                border-radius: 8px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                font-size: 16px;
+                margin: 10px 0;
+            }
+            
+            input::placeholder {
+                color: rgba(255, 255, 255, 0.7);
+            }
+            
+            input:focus {
+                outline: none;
+                border-color: #4CAF50;
+                background: rgba(255, 255, 255, 0.2);
+            }
+            
+            .instructions {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(0, 0, 0, 0.7);
+                padding: 15px;
+                border-radius: 10px;
+                font-size: 14px;
+                max-width: 250px;
+            }
+            
+            .instructions h3 {
+                color: #4CAF50;
+                margin-bottom: 10px;
+            }
+            
+            @media (max-width: 768px) {
+                .main-content {
+                    flex-direction: column;
+                    padding: 10px;
+                }
+                
+                .controls {
+                    min-width: auto;
+                }
+                
+                .cube-container {
+                    min-height: 400px;
+                }
+                
+                .instructions {
+                    position: static;
+                    margin-top: 20px;
+                    max-width: none;
+                }
+            }
+        </style>
     </head>
     <body>
         <header class="header">
-            <h1>CFOP Cube Solver</h1>
-            <p>Interactive 3D Rubik's Cube with WebAssembly-powered solver</p>
+            <h1>🧩 Rubik's Cube Solver</h1>
+            <p>Interactive 3D cube with smart solving algorithms</p>
         </header>
         
         <main class="main-content">
-            <section class="controls-panel">
-                <div class="control-group">
-                    <button id="solve-button" class="btn btn-primary" aria-label="Solve the cube using CFOP method">
-                        🔄 SOLVE
-                    </button>
-                    <button id="scramble-button" class="btn btn-secondary" aria-label="Scramble the cube randomly">
-                        🎲 SCRAMBLE
-                    </button>
-                    <button id="reset-button" class="btn btn-secondary" aria-label="Reset cube to solved state">
-                        ↻ RESET
-                    </button>
-                </div>
+            <div class="controls">
+                <button id="solve-button" class="btn btn-primary">🔄 SOLVE</button>
+                <button id="scramble-button" class="btn">🎲 SCRAMBLE</button>
+                <button id="reset-button" class="btn">↻ RESET</button>
                 
-                <div class="control-group">
-                    <label for="scramble-input">Custom Scramble:</label>
-                    <input 
-                        type="text" 
-                        id="scramble-input" 
-                        placeholder="R U R' U' F R F'" 
-                        aria-describedby="scramble-help"
-                        autocomplete="off"
-                        spellcheck="false"
-                    >
-                    <button id="apply-scramble" class="btn btn-small" aria-label="Apply custom scramble">
-                        Apply
-                    </button>
-                    <small id="scramble-help">Use standard cube notation (R, U, L, D, F, B)</small>
-                </div>
-                
-                <div class="info-panel" role="status" aria-live="polite">
-                    <div id="move-counter">Moves: 0</div>
-                    <div id="solver-status">Ready</div>
-                </div>
-            </section>
+                <input 
+                    type="text" 
+                    id="scramble-input" 
+                    placeholder="Custom moves (R U R' U')"
+                >
+                <button id="apply-scramble" class="btn">Apply Moves</button>
+            </div>
             
-            <section class="three-container">
-                <div id="three" role="application" aria-label="Interactive 3D Rubik's Cube"></div>
+            <div class="cube-container">
+                <div id="three"></div>
                 <div class="instructions">
                     <h3>Controls:</h3>
                     <ul>
-                        <li><strong>Mouse:</strong> Click and drag to rotate cube</li>
-                        <li><strong>Keyboard:</strong> Use WASD for face rotations</li>
-                        <li><strong>Mobile:</strong> Touch and drag to rotate</li>
+                        <li>🖱️ Mouse: Zoom & rotate</li>
+                        <li>⌨️ Keyboard: WASD to turn faces</li>
+                        <li>📱 Touch: Drag to interact</li>
                     </ul>
                 </div>
-            </section>
+            </div>
         </main>
         
-        <footer class="footer">
-            <p>Powered by CFOP algorithm • Built with Three.js & WebAssembly</p>
-            <p>
-                <a href="https://github.com/chintanlad10/cfop-cube-solver" target="_blank" rel="noopener noreferrer">
-                    View on GitHub
-                </a>
-            </p>
-        </footer>
-        
-        <!-- Loading indicator -->
-        <div id="loading" class="loading-overlay" aria-hidden="true">
-            <div class="loading-spinner"></div>
-            <p>Loading WebAssembly module...</p>
-        </div>
-        
-        <!-- Error boundary -->
-        <div id="error-boundary" class="error-boundary" role="alert" aria-hidden="true">
-            <h2>Something went wrong</h2>
-            <p id="error-message"></p>
-            <button id="reload-button" class="btn btn-primary">Reload Page</button>
-        </div>
-        
-        <script src="js/cube/main.js" type="module"></script>
+        <script type="module">
+            import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
+            import { OrbitControls } from "./js/three/OrbitControls.js";
+            import Cube from "./js/cube/Cube.js";
+            
+            // Initialize scene
+            const scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x222222);
+            
+            // Camera setup
+            const container = document.getElementById('three');
+            const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+            camera.position.set(5, 5, 8);
+            
+            // Renderer setup
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            container.appendChild(renderer.domElement);
+            
+            // Lighting
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 10, 10);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+            
+            // Controls
+            const controls = new OrbitControls(camera, renderer.domElement);
+            controls.enableDamping = true;
+            controls.dampingFactor = 0.05;
+            controls.maxDistance = 20;
+            controls.minDistance = 3;
+            
+            // Create cube
+            const cube = new Cube(scene);
+            
+            // Resize handler
+            function onResize() {
+                const rect = container.getBoundingClientRect();
+                camera.aspect = rect.width / rect.height;
+                camera.updateProjectionMatrix();
+                renderer.setSize(rect.width, rect.height);
+            }
+            
+            window.addEventListener('resize', onResize);
+            onResize();
+            
+            // Button handlers
+            document.getElementById('solve-button').addEventListener('click', () => {
+                console.log('Solve button clicked - solver integration needed');
+            });
+            
+            document.getElementById('scramble-button').addEventListener('click', () => {
+                cube.scramble();
+            });
+            
+            document.getElementById('reset-button').addEventListener('click', () => {
+                cube.reset();
+            });
+            
+            document.getElementById('apply-scramble').addEventListener('click', () => {
+                const moves = document.getElementById('scramble-input').value.trim();
+                if (moves) {
+                    cube.applyMoves(moves);
+                }
+            });
+            
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                controls.update();
+                renderer.render(scene, camera);
+            }
+            animate();
+        </script>
     </body>
 </html>

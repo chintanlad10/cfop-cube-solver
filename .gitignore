@@ -34,3 +34,6 @@ Thumbs.db
 
 # Reference folder (if you want to exclude it from version control)
 # ref/
+
+# Web reference folder - keep locally only
+web/
