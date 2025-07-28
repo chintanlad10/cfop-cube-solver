@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content="Interactive 3D Rubik's Cube Solver using CFOP method with WebAssembly and Three.js" />
+        <meta name="keywords" content="rubiks cube, solver, cfop, 3d, webassembly, threejs" />
+        <title>CFOP Rubik's Cube Solver - Interactive 3D</title>
+        <link rel="stylesheet" href="style.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Sen:wght@400;600;700&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div class="header">
+            <h1>CFOP Cube Solver</h1>
+            <p>Interactive 3D Rubik's Cube with WebAssembly-powered solver</p>
+        </div>
+        
+        <div class="controls-panel">
+            <div class="control-group">
+                <button id="solve-button" class="btn btn-primary">🔄 SOLVE</button>
+                <button id="scramble-button" class="btn btn-secondary">🎲 SCRAMBLE</button>
+                <button id="reset-button" class="btn btn-secondary">↻ RESET</button>
+            </div>
+            
+            <div class="control-group">
+                <label for="scramble-input">Custom Scramble:</label>
+                <input type="text" id="scramble-input" placeholder="R U R' U' F R F'" />
+                <button id="apply-scramble" class="btn btn-small">Apply</button>
+            </div>
+            
+            <div class="info-panel">
+                <div id="move-counter">Moves: 0</div>
+                <div id="solver-status">Ready</div>
+            </div>
+        </div>
+        
+        <div class="three-container">
+            <div id="three"></div>
+            <div class="instructions">
+                <h3>Controls:</h3>
+                <ul>
+                    <li><strong>Mouse:</strong> Click and drag to rotate cube</li>
+                    <li><strong>Keyboard:</strong> Use WASD for face rotations</li>
+                    <li><strong>Mobile:</strong> Touch and drag to rotate</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Powered by CFOP algorithm • Built with Three.js & WebAssembly</p>
+            <p><a href="https://github.com/your-username/cfop-solver" target="_blank">View on GitHub</a></p>
+        </div>
+        
+        <script src="js/cube/main.js" type="module"></script>
+        <script async src="js/cube/solver/cube-solver.js"></script>
+    </body>
+</html>

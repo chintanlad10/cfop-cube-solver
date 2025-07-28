@@ -1,0 +1,36 @@
+# Build artifacts
+*.o
+*.obj
+*.exe
+cube-solver
+cube-solver.exe
+
+# Visual Studio files
+*.vcxproj.user
+*.sln
+*.vcxproj
+*.vcxproj.filters
+
+# IDE files
+.vscode/settings.json
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Emscripten web builds
+*.js
+*.wasm
+
+# Log files
+*.log
+
+# Temporary files
+*.tmp
+*.temp
+
+# Reference folder (if you want to exclude it from version control)
+# ref/

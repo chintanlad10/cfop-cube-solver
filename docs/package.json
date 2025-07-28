@@ -1,0 +1,39 @@
+{
+  "name": "cfop-cube-solver-web",
+  "version": "1.0.0",
+  "description": "Interactive 3D Rubik's Cube solver using CFOP method with WebAssembly",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "serve . --listen 8000",
+    "build": "echo 'Static site - no build step needed'",
+    "build-wasm": "em++ ../Web.cpp ../Cube/*.cpp ../Solver/*.cpp ../Util/*.cpp --bind -o js/cube/solver/cube-solver.js -s ALLOW_MEMORY_GROWTH=1 -s EXPORTED_RUNTIME_METHODS='[\"ccall\", \"cwrap\"]' -I../Cube -I../Solver -I../Util",
+    "test": "echo 'No tests configured yet'",
+    "deploy": "netlify deploy --prod --dir=."
+  },
+  "keywords": [
+    "rubiks-cube",
+    "cfop",
+    "threejs",
+    "webassembly",
+    "3d",
+    "solver",
+    "interactive",
+    "cube"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.0.0",
+    "netlify-cli": "^12.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "last 2 Chrome versions",
+    "last 2 Firefox versions",
+    "last 2 Safari versions",
+    "last 2 Edge versions"
+  ]
+}
